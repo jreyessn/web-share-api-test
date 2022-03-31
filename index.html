@@ -13,7 +13,7 @@
             <button class="bg-blue-700 text-white px-5 py-2.5 font-medium rounded-lg text-sm shadow rounded-lg hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-800 ">
                 Share
             </button>
-            <p class="messageSupport text-sm">
+            <p class="messageSupport text-center text-sm">
                 
             </p>
         </div>
@@ -22,9 +22,26 @@
 
     <script>
         const messageSupport = document.querySelector(".messageSupport")
+        var files;
 
         document.addEventListener("DOMContentLoaded", function(){
-            if(canShareNavigator()){
+            canShareNavigator()
+        })
+
+        document.querySelector("button").addEventListener("click", function(){
+            share();
+        })
+
+        async function canShareNavigator(){
+            const response = await fetch("./sample.pdf");
+            const buffer = await response.arrayBuffer();
+
+            const pdf = new File([buffer], "sample.pdf", { type: "application/pdf" });
+
+            files = [ pdf ];
+
+            // Share PDF file if supported.
+            if (navigator.canShare({ files })){
                 messageSupport.textContent = "Este navegador soporta Share API"
                 messageSupport.classList.add("text-green-600")
             }
@@ -32,36 +49,16 @@
                 messageSupport.innerHTML = "Este navegador no soporta Share API. Revisar <a class='text-sky-600' href='https://caniuse.com/web-share' target='_blank'>https://caniuse.com/web-share</a>"
                 messageSupport.classList.add("text-red-600")
             }
-        })
 
-        document.querySelector("button").addEventListener("click", function(){
-            share();
-        })
-
-        function canShareNavigator(){
-            try {
-                return navigator.canShare()? true : false;
-            }
-            catch{
-                return false;
-            }
         }
 
         async function share(){
-
-            const response = await fetch("./sample.pdf");
-            const buffer = await response.arrayBuffer();
-
-            const pdf = new File([buffer], "sample.pdf", { type: "application/pdf" });
-            const files = [pdf];
 
             // Share PDF file if supported.
             if (navigator.canShare({ files })){
                 // alert("Si se puede")
                 await navigator.share({ files });
             }
-
-            // alert("No se puede")
 
         }
 
