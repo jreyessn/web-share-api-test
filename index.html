@@ -33,19 +33,25 @@
         })
 
         async function canShareNavigator(){
-            const response = await fetch("./sample.pdf");
-            const buffer = await response.arrayBuffer();
+            try {
+                const response = await fetch("./sample.pdf");
+                const buffer = await response.arrayBuffer();
 
-            const pdf = new File([buffer], "sample.pdf", { type: "application/pdf" });
+                const pdf = new File([buffer], "sample.pdf", { type: "application/pdf" });
 
-            files = [ pdf ];
+                files = [ pdf ];
 
-            // Share PDF file if supported.
-            if (navigator.canShare({ files })){
-                messageSupport.textContent = "Este navegador soporta Share API"
-                messageSupport.classList.add("text-green-600")
+                // Share PDF file if supported.
+                if (navigator.canShare({ files })){
+                    messageSupport.textContent = "Este navegador soporta Share API"
+                    messageSupport.classList.add("text-green-600")
+                }
+                else{
+                    messageSupport.innerHTML = "Este navegador no soporta Share API. Revisar <a class='text-sky-600' href='https://caniuse.com/web-share' target='_blank'>https://caniuse.com/web-share</a>"
+                    messageSupport.classList.add("text-red-600")
+                }
             }
-            else{
+            catch {
                 messageSupport.innerHTML = "Este navegador no soporta Share API. Revisar <a class='text-sky-600' href='https://caniuse.com/web-share' target='_blank'>https://caniuse.com/web-share</a>"
                 messageSupport.classList.add("text-red-600")
             }
