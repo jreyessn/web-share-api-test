@@ -4,19 +4,48 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
     <title>Web Share</title>
 </head>
 <body>
-
-    <button>Share Example.pdf</button>
+    <div class="w-screen h-screen bg-gray-300">
+        <div class="flex flex-col items-center justify-center h-full w-full">
+            <button class="bg-blue-700 text-white px-5 py-2.5 font-medium rounded-lg text-sm shadow rounded-lg hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-800 ">
+                Share
+            </button>
+            <p class="messageSupport text-sm">
+                
+            </p>
+        </div>
+      </div>
 
 
     <script>
-        const button = document.querySelector("button")
+        const messageSupport = document.querySelector(".messageSupport")
 
-        button.addEventListener("click", function(){
-            share()
+        document.addEventListener("DOMContentLoaded", function(){
+            if(canShareNavigator()){
+                messageSupport.textContent = "Este navegador soporta Share API"
+                messageSupport.classList.add("text-green-600")
+            }
+            else{
+                messageSupport.innerHTML = "Este navegador no soporta Share API. Revisar <a class='text-sky-600' href='https://caniuse.com/web-share' target='_blank'>https://caniuse.com/web-share</a>"
+                messageSupport.classList.add("text-red-600")
+            }
         })
+
+        document.querySelector("button").addEventListener("click", function(){
+            share();
+        })
+
+        function canShareNavigator(){
+            try {
+                return navigator.canShare()? true : false;
+            }
+            catch{
+                return false;
+            }
+        }
 
         async function share(){
 
